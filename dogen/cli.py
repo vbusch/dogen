@@ -87,7 +87,7 @@ class CLI(object):
         except KeyboardInterrupt as e:
             pass
         except Error as e:
-            self.log.exception(e)
+            self.log.error(e)
             sys.exit(1)
 
     def get_plugins(self):
