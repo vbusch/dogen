@@ -70,3 +70,16 @@ class TestArtifactPlugin(unittest.TestCase):
 
         self.assertTrue(os.path.exists(os.path.join(self.target_dir, "artifact1")))
         self.assertTrue(os.path.exists(os.path.join(self.target_dir, "artifact2")))
+
+    def test_local_artifact_files_and_subdirectories_should_be_copied_to_target(self):
+        open(os.path.join(self.artifact_dir, "artifact1"), 'a').close()
+        subdir = os.path.join(self.artifact_dir, "subdir")
+        if not os.path.exists(subdir):
+            os.makedirs(subdir)
+        open(os.path.join(subdir, "artifact2"), 'a').close()
+
+        self.prepare_dogen(self.artifact_dir, self.target_dir)
+        self.dogen.run()
+
+        self.assertTrue(os.path.exists(os.path.join(self.target_dir, "artifact1")))
+        self.assertTrue(os.path.exists(os.path.join(subdir, "artifact2")))

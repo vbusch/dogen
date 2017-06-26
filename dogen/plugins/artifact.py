@@ -30,9 +30,18 @@ class Artifact(Plugin):
             return
         self.log.info("Copying local artifact files from '%s'" % self.args.artifact_local_dir)
 
-        for f in sorted(self.artifact_files):
-            self.log.debug("Copying local artifact %s" % os.path.basename(f))
-            shutil.copy2(f, self.output)
+        for item in sorted(self.artifact_files):
+            src = os.path.join(self.args.artifact_local_dir, item)
+            dest = os.path.join(self.output, item)
+            self.log.debug("Copying local artifact %s" % os.path.basename(src))
+            if os.path.isdir(src):
+                if os.path.exists(dest):
+                    shutil.rmtree(dest) 
+                shutil.copytree(src, dest)
+            else:
+                if os.path.exists(dest):
+                    os.remove(dest)
+                shutil.copy2(src, dest)
 
         self.log.debug("Done.")
 
@@ -49,7 +58,7 @@ class Artifact(Plugin):
             self.log.debug("Provided path to directory with local artifact files does not exists or is not a directory")
             return
             
-        self.artifact_files = glob.glob(os.path.join(self.args.artifact_local_dir, "*"))
+        self.artifact_files = os.listdir(self.args.artifact_local_dir)
 
         if not self.artifact_files:
             self.log.debug("No local artifacts found")
