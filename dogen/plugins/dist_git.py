@@ -18,7 +18,7 @@ class DistGitPlugin(Plugin):
 
     def __init__(self, dogen, args):
         super(DistGitPlugin, self).__init__(dogen, args)
-        if  not self.args.dist_git_enable:
+        if not self.args.dist_git_enable:
             return
         self.git = Git(self.log, os.path.dirname(self.descriptor), self.output, self.args.dist_git_assume_yes)
 
